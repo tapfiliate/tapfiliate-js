@@ -64,3 +64,12 @@ To make the initialization easier we added the init function. Use Tap.init to in
 | referral_code       | `String` Use this to explicitly pass a specific referral code for this click.                                                                                          |
 | referral_code_param | `String`. Use an alternative query parameter for the referral code, instead of ref. For example if you would like your links to look like: https://.../?via=, pass via |
 | always_callback     | `Boolean` Set to true to also make your callback fire on failed tracking attempts. [More info](https://developers.tapfiliate.com/tracking/javascript#callbacks)                |
+
+## Changelog
+
+### 1.0.3
+
+- Works with `require()` and in server-side rendering. The package now ships both CommonJS and ES module builds, which fixes `SyntaxError: Unexpected token 'export'` in Next.js and Node.js 18–20 ([#1](https://github.com/tapfiliate/tapfiliate-js/issues/1)).
+- TypeScript types included.
+- `Tap` is no longer mistaken for a promise or a transpiled module by bundlers.
+- If tapfiliate.js fails to load (for example, blocked by an ad blocker), a console warning names the script.

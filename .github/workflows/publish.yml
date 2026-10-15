@@ -1,0 +1,32 @@
+name: Publish to npm
+
+# Runs when a GitHub release is published. npm trusts this workflow directly (trusted publishing):
+# no npm token is stored anywhere, and the package gets a provenance statement.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+      - name: Release tag must match package.json
+        run: |
+          version="v$(node -p "require('./package.json').version")"
+          if [ "$version" != "${GITHUB_REF_NAME}" ]; then
+            echo "Release tag ${GITHUB_REF_NAME} does not match package.json ${version}"
+            exit 1
+          fi
+      # Trusted publishing needs npm 11.5.1 or newer.
+      - run: npm install -g npm@11.6.2
+      - run: npm test
+      - run: npm publish --access public
