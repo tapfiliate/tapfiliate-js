@@ -72,4 +72,4 @@ To make the initialization easier we added the init function. Use Tap.init to in
 - Works with `require()` and in server-side rendering. The package now ships both CommonJS and ES module builds, which fixes `SyntaxError: Unexpected token 'export'` in Next.js and Node.js 18–20 ([#1](https://github.com/tapfiliate/tapfiliate-js/issues/1)).
 - TypeScript types included.
 - `Tap` is no longer mistaken for a promise or a transpiled module by bundlers.
-- A failed load of tapfiliate.js reports the script URL correctly.
+- If tapfiliate.js fails to load (for example, blocked by an ad blocker), a console warning names the script.
