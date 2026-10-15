@@ -1,6 +1,6 @@
 # Tapfiliate npm module
 
-This is a simple wrapper for the Tapfiliate [JavaScript integration](https://tapfiliate.com/docs/javascript/) library to help with implementation in modern frontend applications.
+This is a simple wrapper for the Tapfiliate [JavaScript integration](https://developers.tapfiliate.com/tracking/javascript) library to help with implementation in modern frontend applications.
 
 ### Table of content
 
@@ -33,7 +33,7 @@ Read more about testing your integration [here](https://support.tapfiliate.com/e
 
 ## API
 
-This npm module mirrors the Tapfiliate [JavaScript integration](https://tapfiliate.com/docs/javascript/) library and all functions from the Javascript Docs can be used with this wrapper with the only difference that the first parameter is now the function name.
+This npm module mirrors the Tapfiliate [JavaScript integration](https://developers.tapfiliate.com/tracking/javascript) library and all functions from the Javascript Docs can be used with this wrapper with the only difference that the first parameter is now the function name.
 
 e.g. instead of:
 `tap('conversion', external id, amount, options, commission type, callback);`
@@ -63,4 +63,4 @@ To make the initialization easier we added the init function. Use Tap.init to in
 | cookie_domain       | `string`. Explicitly define the domain to place the cookie on. Can be used when users land on subdomain A and later convert on subdomain B.                            |
 | referral_code       | `String` Use this to explicitly pass a specific referral code for this click.                                                                                          |
 | referral_code_param | `String`. Use an alternative query parameter for the referral code, instead of ref. For example if you would like your links to look like: https://.../?via=, pass via |
-| always_callback     | `Boolean` Set to true to also make your callback fire on failed tracking attempts. [More info](https://tapfiliate.com/docs/javascript/#detect-callback)                |
+| always_callback     | `Boolean` Set to true to also make your callback fire on failed tracking attempts. [More info](https://developers.tapfiliate.com/tracking/javascript#callbacks)                |
