@@ -1,6 +1,12 @@
+// Names that JavaScript itself and module loaders probe on any object. Forwarding them as tapfiliate.js
+// methods made Tap look like a promise (`then`) or like a transpiled ES module (`__esModule`).
+const notTapMethods = new Set(["then", "__esModule", "toJSON", "constructor"]);
+
 const handler = {
   get: function(target, name) {
-    return target.hasOwnProperty(name) ? target[name] : (...args) => {
+    if (Object.prototype.hasOwnProperty.call(target, name)) return target[name];
+    if (typeof name !== "string" || notTapMethods.has(name)) return undefined;
+    return (...args) => {
       window.__tap(name, ...args);
     };
   }

@@ -1,19 +1,43 @@
 {
   "name": "@tapfiliate/tapfiliate-js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simple wrapper for the Tapfiliate javascript integration library to help with implementation in modern frontend applications.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
   },
-  "author": "",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "prepublishOnly": "npm test"
+  },
+  "keywords": [
+    "tapfiliate",
+    "affiliate",
+    "affiliate-tracking",
+    "referral",
+    "conversion-tracking"
+  ],
+  "author": "Tapfiliate",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Tapfiliate/tapfiliate-js.git"
+    "url": "git+https://github.com/tapfiliate/tapfiliate-js.git"
   },
-  "homepage": "https://github.com/Tapfiliate/tapfiliate-js#readme",
+  "homepage": "https://developers.tapfiliate.com/tracking/javascript",
   "bugs": {
-    "url": "https://github.com/Tapfiliate/tapfiliate-js/issues"
+    "url": "https://github.com/tapfiliate/tapfiliate-js/issues"
   }
 }
