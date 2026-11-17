@@ -79,6 +79,22 @@ for (const [format, load] of [
     cleanBrowser();
   });
 
+  test(`${format}: the npm-module integration stays when other create options are passed`, async () => {
+    fakeBrowser();
+    const Tap = await load();
+    Tap.init('ACCOUNT_ID', { include_methods: ['3p'] });
+    assert.deepEqual(window.__tap.q[0][2], { integration: 'npm-module', include_methods: ['3p'] });
+    cleanBrowser();
+  });
+
+  test(`${format}: an explicit integration wins`, async () => {
+    fakeBrowser();
+    const Tap = await load();
+    Tap.init('ACCOUNT_ID', { integration: 'nuxt-module' });
+    assert.equal(window.__tap.q[0][2].integration, 'nuxt-module');
+    cleanBrowser();
+  });
+
   test(`${format}: on the server init and methods do nothing`, async () => {
     cleanBrowser();
     const Tap = await load();

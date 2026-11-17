@@ -34,7 +34,7 @@ const handler = {
 };
 
 const target = {
-  init: (accountId, createOptions = { integration: "npm-module" }, createCallback, detectOptions = {}, detectCallback) => {
+  init: (accountId, createOptions, createCallback, detectOptions = {}, detectCallback) => {
     if (!inBrowser()) return;
 
     // Already set up: by a Tapfiliate snippet on the page, by an earlier init(), or tapfiliate.js has loaded
@@ -47,7 +47,10 @@ const target = {
     // create and detect go before the calls queued earlier: tapfiliate.js replays the queue in order, and a
     // conversion takes the account id from create.
     tap.q = tap.q || [];
-    tap.q.unshift(["create", accountId, createOptions, createCallback], ["detect", detectOptions, detectCallback]);
+    // `integration` tells Tapfiliate the account tracks through this package; it stays when other create options are
+    // passed (1.1.0 and earlier dropped it then), and an explicit `integration` still wins.
+    var options = Object.assign({ integration: "npm-module" }, createOptions);
+    tap.q.unshift(["create", accountId, options, createCallback], ["detect", detectOptions, detectCallback]);
 
     var script = document.createElement("script");
     script.src = scriptSrc;

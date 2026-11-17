@@ -67,6 +67,10 @@ To make the initialization easier we added the init function. Use Tap.init to in
 
 ## Changelog
 
+### 1.1.1
+
+- `Tap.init` keeps reporting the integration as `npm-module` when you pass your own create options; before, passing any create options dropped it.
+
 ### 1.1.0
 
 - Calls made before `Tap.init` are no longer lost: they wait in a queue and run right after `init`. Before, `Tap.conversion(...)` called too early threw `window.__tap is not a function`.
