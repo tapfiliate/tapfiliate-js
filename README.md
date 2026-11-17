@@ -24,7 +24,7 @@ Import and initialize your tracking using the init function. Get your account id
 
 `Tap.init(accountId);`
 
-The init function will add the Tapfiliate script to your webiste's head tag. This is needed for you to be able to use the rest of the Tap functions.
+The init function will add the Tapfiliate script to your website's head tag. This is needed for you to be able to use the rest of the Tap functions.
 
 ## Test your integration
 
@@ -66,6 +66,12 @@ To make the initialization easier we added the init function. Use Tap.init to in
 | always_callback     | `Boolean` Set to true to also make your callback fire on failed tracking attempts. [More info](https://developers.tapfiliate.com/tracking/javascript#callbacks)                |
 
 ## Changelog
+
+### 1.1.0
+
+- Calls made before `Tap.init` are no longer lost: they wait in a queue and run right after `init`. Before, `Tap.conversion(...)` called too early threw `window.__tap is not a function`.
+- Safe in server-side rendering: on the server (no `window`), `Tap.init` and all other methods do nothing instead of throwing. Tracking happens when the page runs in the browser.
+- TypeScript types for the tracking methods (`conversion`, `conversionMulti`, `customer`, `trial`, `lead`, `click`, `detect`) and their options, so your editor shows the arguments.
 
 ### 1.0.3
 
