@@ -1,30 +1,56 @@
+const scriptSrc = "https://script.tapfiliate.com/tapfiliate.js";
+
 // Names that JavaScript itself and module loaders probe on any object. Forwarding them as tapfiliate.js
 // methods made Tap look like a promise (`then`) or like a transpiled ES module (`__esModule`).
 const notTapMethods = new Set(["then", "__esModule", "toJSON", "constructor"]);
+
+// On the server (Next.js, Nuxt and other server-side rendering) there is no page to track: do nothing.
+function inBrowser() {
+  return typeof window !== "undefined" && typeof document !== "undefined";
+}
+
+// The queue tapfiliate.js replays when it loads. Created on the first call, so calls made before init() are
+// kept instead of failing. `npm` marks it as ours, unlike the queue of a Tapfiliate snippet already on the page.
+function tapQueue() {
+  if (!window.__tap) {
+    window.TapfiliateObject = "__tap";
+    window.__tap = function() {
+      (window.__tap.q = window.__tap.q || []).push(arguments);
+    };
+    window.__tap.npm = true;
+  }
+  return window.__tap;
+}
 
 const handler = {
   get: function(target, name) {
     if (Object.prototype.hasOwnProperty.call(target, name)) return target[name];
     if (typeof name !== "string" || notTapMethods.has(name)) return undefined;
     return (...args) => {
-      window.__tap(name, ...args);
+      if (!inBrowser()) return;
+      tapQueue()(name, ...args);
     };
   }
 };
 
 const target = {
   init: (accountId, createOptions = { integration: "npm-module" }, createCallback, detectOptions = {}, detectCallback) => {
-    if (window.__tap) return;
+    if (!inBrowser()) return;
 
-    (function(t, a, p) {
-      t.TapfiliateObject = a;
-      t[a] = t[a] || function() {
-        (t[a].q = t[a].q || []).push(arguments);
-      };
-    })(window, "__tap");
+    // Already set up: by a Tapfiliate snippet on the page, by an earlier init(), or tapfiliate.js has loaded
+    // (it replaces the queue with its own function).
+    if (window.__tap && (!window.__tap.npm || window.__tap.npmInitialized)) return;
+
+    var tap = tapQueue();
+    tap.npmInitialized = true;
+
+    // create and detect go before the calls queued earlier: tapfiliate.js replays the queue in order, and a
+    // conversion takes the account id from create.
+    tap.q = tap.q || [];
+    tap.q.unshift(["create", accountId, createOptions, createCallback], ["detect", detectOptions, detectCallback]);
 
     var script = document.createElement("script");
-    script.src = "https://script.tapfiliate.com/tapfiliate.js";
+    script.src = scriptSrc;
     script.type = "text/javascript";
     script.async = true;
 
@@ -35,9 +61,6 @@ const target = {
     script.addEventListener("error", function() {
       console.warn(`${this.src} failed to load.`);
     });
-
-    window.__tap("create", accountId, createOptions, createCallback);
-    window.__tap("detect", detectOptions, detectCallback);
   }
 };
 
